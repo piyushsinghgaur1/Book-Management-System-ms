@@ -1,11 +1,15 @@
 import {HttpErrors} from '@loopback/rest';
 import {BookInterface} from '../interfaces/book-interface';
 import axios from 'axios';
+import config from '../config';
+const {
+  DEVELOPMENT: {AUTHOR_BASE_URL, CATEGORY_BASE_URL},
+} = config;
 
 export class BookValidator {
   private static instance: BookValidator;
-  private authorServiceUrl = 'http://localhost:3002';
-  private categoryServiceUrl = 'http://localhost:3003';
+  private authorServiceUrl = AUTHOR_BASE_URL;
+  private categoryServiceUrl = CATEGORY_BASE_URL;
 
   // Private constructor to prevent instantiation
   private constructor() {}

@@ -32,7 +32,7 @@
     "preopenapi-spec": "yarn run build",
     "openapi-spec": "node ./dist/openapi-spec",
     "prestart": "yarn run rebuild",
-    "start": "node -r source-map-support/register .",
+    "start": "node -r newrelic dist/index.js",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
     "rebuild": "yarn run clean && yarn run build"
   },
@@ -55,7 +55,14 @@
     "@loopback/rest": "^14.0.11",
     "@loopback/rest-explorer": "^7.0.11",
     "@loopback/service-proxy": "^7.0.11",
+    "@types/passport-http-bearer": "^1.0.41",
+    "@types/passport-local": "^1.0.38",
     "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "loopback4-authentication": "^12.2.0",
+    "loopback4-authorization": "^7.0.3",
+    "newrelic": "^12.16.1",
     "tslib": "^2.0.0"
   },
   "devDependencies": {

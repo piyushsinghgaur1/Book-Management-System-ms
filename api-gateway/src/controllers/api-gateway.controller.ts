@@ -1,20 +1,33 @@
-import {get, post, patch, put, del, requestBody, param} from '@loopback/rest';
+import {
+  get,
+  post,
+  patch,
+  del,
+  requestBody,
+  param,
+  HttpErrors,
+} from '@loopback/rest';
 import axios from 'axios';
 import {BookValidator} from '../validations/validate-book';
 import {AuthorValidator} from '../validations/validate-author';
 import {CategoryValidator} from '../validations/validate-category';
+import {BookInterface} from '../interfaces/book-interface';
+import config from '../config';
+const {
+  DEVELOPMENT: {BOOK_BASE_URL, AUTHOR_BASE_URL, CATEGORY_BASE_URL},
+} = config;
 
 export class ApiGatewayController {
-  private bookServiceUrl = 'http://localhost:3001';
-  private authorServiceUrl = 'http://localhost:3002';
-  private categoryServiceUrl = 'http://localhost:3003';
+  private bookServiceUrl = BOOK_BASE_URL;
+  private authorServiceUrl = AUTHOR_BASE_URL;
+  private categoryServiceUrl = CATEGORY_BASE_URL;
   private bookValidator = BookValidator.getInstance();
 
   constructor() {}
 
   // Books endpoints
   @post('/books')
-  async createBook(@requestBody() book: any) {
+  async createBook(@requestBody() book: BookInterface) {
     try {
       await this.bookValidator.validate(book);
     } catch (error) {
@@ -32,18 +45,29 @@ export class ApiGatewayController {
       const books = booksResponse.data;
       const booksWithDetails = await Promise.all(
         books.map(async (book: any) => {
-          const author = await this.fetchAuthor(book.authorId);
-          const category = await this.fetchCategory(book.categoryId);
-          return {
-            bookId: book.bookId,
-            title: book.title,
-            isbn: book.isbn,
-            discountPercentage: book.discountPercentage,
-            price: book.price,
-            author: author.authorName,
-            genre: category.categoryName,
-            discription: book.discription,
-          };
+          try {
+            const author = await this.fetchAuthor(book.authorId);
+            if (!author) {
+              throw new HttpErrors.BadRequest('Author not found');
+            }
+            const category = await this.fetchCategory(book.categoryId);
+            if (!category) {
+              throw new HttpErrors.InternalServerError('Category not found');
+            }
+            return {
+              bookId: book.bookId,
+              title: book.title,
+              isbn: book.isbn,
+              discountPercentage: book.discountPercentage,
+              price: book.price,
+              author: author.authorName,
+              genre: category.categoryName,
+              discription: book.discription,
+            };
+          } catch (error) {
+            console.error('Failed to fetch author or category:', error.message);
+            return book;
+          }
         }),
       );
       return booksWithDetails;

@@ -1,3 +1,4 @@
+require('newrelic');
 import {ApplicationConfig, AuthorServicesApplication} from './application';
 
 export * from './application';

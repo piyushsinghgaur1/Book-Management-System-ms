@@ -3,13 +3,13 @@ import {juggler} from '@loopback/repository';
 
 const config = {
   name: 'categoryDB',
-  connector: 'mysql',
+  connector: 'postgresql',
   url: '',
   host: '127.0.0.1',
-  port: 3306,
+  port: 5432,
   user: 'piyush',
   password: 'password',
-  database: 'category'
+  database: 'category',
 };
 
 // Observe application's life cycle to disconnect the datasource when
@@ -17,8 +17,10 @@ const config = {
 // gracefully. The `stop()` method is inherited from `juggler.DataSource`.
 // Learn more at https://loopback.io/doc/en/lb4/Life-cycle.html
 @lifeCycleObserver('datasource')
-export class CategoryDbDataSource extends juggler.DataSource
-  implements LifeCycleObserver {
+export class CategoryDbDataSource
+  extends juggler.DataSource
+  implements LifeCycleObserver
+{
   static dataSourceName = 'categoryDB';
   static readonly defaultConfig = config;
 
