@@ -1,4 +1,4 @@
-import {inject} from '@loopback/context/dist';
+import {inject} from '@loopback/core';
 import {
   FindRoute,
   InvokeMethod,
@@ -10,7 +10,7 @@ import {
   SequenceHandler,
 } from '@loopback/rest';
 import {AuthenticateFn, AuthenticationBindings} from 'loopback4-authentication';
-import {UserSignUpInterface} from './interfaces/user-interface';
+import {User} from './models/user.model';
 
 export class MySequence implements SequenceHandler {
   constructor(
@@ -20,7 +20,7 @@ export class MySequence implements SequenceHandler {
     @inject(SequenceActions.SEND) public send: Send,
     @inject(SequenceActions.REJECT) public reject: Reject,
     @inject(AuthenticationBindings.USER_AUTH_ACTION)
-    protected authenticateRequest: AuthenticateFn<UserSignUpInterface>,
+    protected authenticateRequest: AuthenticateFn<User>,
   ) {}
 
   async handle(context: RequestContext) {
@@ -29,10 +29,7 @@ export class MySequence implements SequenceHandler {
       const route = this.findRoute(request);
       const args = await this.parseParams(request, route);
       request.body = args[args.length - 1];
-      const authUser: UserSignUpInterface = await this.authenticateRequest(
-        request,
-        response,
-      );
+      const authUser: User = await this.authenticateRequest(request, response);
       console.log('from seq', authUser);
       const result = await this.invoke(route, args);
       this.send(response, result);

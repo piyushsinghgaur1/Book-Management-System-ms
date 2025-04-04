@@ -13,19 +13,53 @@ import {AuthorValidator} from '../validations/validate-author';
 import {CategoryValidator} from '../validations/validate-category';
 import {BookInterface} from '../interfaces/book-interface';
 import config from '../config';
+import {authenticate, STRATEGY} from 'loopback4-authentication';
+import {
+  UserSignInInterface,
+  UserSignUpInterface,
+} from '../interfaces/user-interface';
 const {
-  DEVELOPMENT: {BOOK_BASE_URL, AUTHOR_BASE_URL, CATEGORY_BASE_URL},
+  DEVELOPMENT: {
+    BOOK_BASE_URL,
+    AUTHOR_BASE_URL,
+    CATEGORY_BASE_URL,
+    AUTH_BASE_URL,
+  },
 } = config;
 
 export class ApiGatewayController {
   private bookServiceUrl = BOOK_BASE_URL;
   private authorServiceUrl = AUTHOR_BASE_URL;
   private categoryServiceUrl = CATEGORY_BASE_URL;
+  private authServiceUrl = AUTH_BASE_URL;
   private bookValidator = BookValidator.getInstance();
 
   constructor() {}
 
+  //Authentication endpoints
+  @post('/signup')
+  async signUp(@requestBody() user: UserSignUpInterface) {
+    try {
+      const response = await axios.post(`${this.authServiceUrl}/signup`, user);
+      return response.data;
+    } catch (error) {
+      console.error('Error during sign up:', error.message);
+      throw new HttpErrors.InternalServerError('Sign up failed');
+    }
+  }
+  @post('/login')
+  async login(@requestBody() user: UserSignInInterface) {
+    try {
+      const response = await axios.post(`${this.authServiceUrl}/login`, user);
+      return response.data;
+    } catch (error) {
+      console.error('Error during login:', error.message);
+      throw new HttpErrors.InternalServerError('Login failed');
+    }
+  }
+
   // Books endpoints
+  @authenticate(STRATEGY.BEARER)
   @post('/books')
   async createBook(@requestBody() book: BookInterface) {
     try {
@@ -38,6 +72,7 @@ export class ApiGatewayController {
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @get('/books')
   async getBooks() {
     try {
@@ -52,7 +87,7 @@ export class ApiGatewayController {
             }
             const category = await this.fetchCategory(book.categoryId);
             if (!category) {
-              throw new HttpErrors.InternalServerError('Category not found');
+              throw new HttpErrors.BadRequest('Category not found');
             }
             return {
               bookId: book.bookId,
@@ -76,12 +111,14 @@ export class ApiGatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
   @get('/books/{id}')
   async getBookById(@param.path.string('id') id: string) {
     const response = await axios.get(`${this.bookServiceUrl}/books/${id}`);
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @patch('/books/{id}')
   async updateBookById(
     @param.path.string('id') id: string,
@@ -94,6 +131,7 @@ export class ApiGatewayController {
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @del('/books/{id}')
   async deleteBookById(@param.path.string('id') id: string) {
     const response = await axios.delete(`${this.bookServiceUrl}/books/${id}`);
@@ -123,6 +161,8 @@ export class ApiGatewayController {
   }
 
   // Authors endpoints
+
+  @authenticate(STRATEGY.BEARER)
   @post('/authors')
   async createAuthor(@requestBody() author: any) {
     try {
@@ -137,18 +177,21 @@ export class ApiGatewayController {
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @get('/authors')
   async getAllAuthors() {
     const response = await axios.get(`${this.authorServiceUrl}/authors`);
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @get('/authors/{id}')
   async getAuthorById(@param.path.string('id') id: string) {
     const response = await axios.get(`${this.authorServiceUrl}/authors/${id}`);
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @patch('/authors/{id}')
   async updateAuthor(
     @param.path.string('id') id: string,
@@ -161,6 +204,7 @@ export class ApiGatewayController {
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @del('/authors/{id}')
   async deleteAuthor(@param.path.string('id') id: string) {
     const response = await axios.delete(
@@ -170,6 +214,7 @@ export class ApiGatewayController {
   }
 
   // Categories endpoints
+  @authenticate(STRATEGY.BEARER)
   @post('/categories')
   async createCategory(@requestBody() category: any) {
     try {
@@ -184,12 +229,14 @@ export class ApiGatewayController {
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @get('/categories')
   async getAllCategories() {
     const response = await axios.get(`${this.categoryServiceUrl}/categories`);
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @get('/categories/{id}')
   async getCategoryById(@param.path.string('id') id: string) {
     const response = await axios.get(
@@ -198,6 +245,7 @@ export class ApiGatewayController {
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @patch('/categories/{id}')
   async updateCategory(
     @param.path.string('id') id: string,
@@ -210,6 +258,7 @@ export class ApiGatewayController {
     return response.data;
   }
 
+  @authenticate(STRATEGY.BEARER)
   @del('/categories/{id}')
   async deleteCategory(@param.path.string('id') id: string) {
     const response = await axios.delete(
