@@ -384,7 +384,7 @@
     tslib "^2.8.1"
     uuid "^10.0.0"
 
-"@loopback/core@^6.0.0", "@loopback/core@^6.1.6", "@loopback/core@^6.1.8":
+"@loopback/core@^6.0.0", "@loopback/core@^6.1.6", "@loopback/core@^6.1.9":
   version "6.1.9"
   resolved "https://registry.npmjs.org/@loopback/core/-/core-6.1.9.tgz"
   integrity sha512-RZGhGRoAo+BvoKNglPB3rqKlzwe43xoTD2byormz8f4kcvdQRUUKWikdhwiZqbzIzba7MmpuW2m2OrbUiPSrkQ==
@@ -498,7 +498,7 @@
     swagger-ui-dist "5.18.3"
     tslib "^2.8.1"
 
-"@loopback/rest@^14.0.0", "@loopback/rest@^14.0.11", "@loopback/rest@^14.0.9":
+"@loopback/rest@^14.0.0", "@loopback/rest@^14.0.12", "@loopback/rest@^14.0.9":
   version "14.0.12"
   resolved "https://registry.npmjs.org/@loopback/rest/-/rest-14.0.12.tgz"
   integrity sha512-Un1tx513ipZnLrVjfty/bXPrgyCQdTmN42lWt1AVjFJ59G9dYj7LMha5SS+NT1H0fiQ5NRO/XTmM0YAsK6ifgw==
@@ -897,6 +897,14 @@
   resolved "https://registry.npmjs.org/@types/jsonfile/-/jsonfile-6.1.4.tgz"
   integrity sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==
   dependencies:
+    "@types/node" "*"
+
+"@types/jsonwebtoken@^9.0.9":
+  version "9.0.9"
+  resolved "https://registry.npmjs.org/@types/jsonwebtoken/-/jsonwebtoken-9.0.9.tgz"
+  integrity sha512-uoe+GxEuHbvy12OUQct2X9JenKM3qAscquYymuQN4fMWG9DBQtykrQEFcAbVACF7qaLw9BePSodUL0kquqBJpQ==
+  dependencies:
+    "@types/ms" "*"
     "@types/node" "*"
 
 "@types/keygrip@*":
