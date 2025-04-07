@@ -3,6 +3,8 @@ import {HttpErrors, post, requestBody} from '@loopback/rest';
 import * as bcrypt from 'bcrypt';
 import {sign} from 'jsonwebtoken';
 import {UserRepository} from '../repositories/user.repository';
+import {UserRole} from '../enums/roles.enum';
+import {RolePermissions} from '../config/role-permission.config';
 
 export class AuthController {
   constructor(
@@ -19,9 +21,9 @@ export class AuthController {
       email?: string;
       firstName?: string;
       lastName?: string;
-      role?: string;
+      role: UserRole;
     },
-  ): Promise<{token: string}> {
+  ): Promise<object> {
     const existingUser = await this.userRepository.findOne({
       where: {username: userData.username},
     });
@@ -29,9 +31,21 @@ export class AuthController {
     if (existingUser) {
       throw new HttpErrors.Conflict('Username already exists');
     }
+
+    // Hash the password before saving it
     const hashPwd = await bcrypt.hash(userData.password, 10);
     userData.password = hashPwd;
-    const user = await this.userRepository.create(userData);
+
+    // Assign permissions based on user role
+    const permissions = RolePermissions[userData.role];
+
+    // Store permissions with user data
+    const user = await this.userRepository.create({
+      ...userData,
+      permissions,
+    });
+
+    // Generate JWT token with role and permissions
     const token = sign(
       {
         id: user.id,
@@ -39,6 +53,7 @@ export class AuthController {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        permissions: user.permissions, // Include permissions in token
         role: user.role,
       },
       process.env.JWT_SECRET || 'mysecretkey123',
@@ -72,7 +87,7 @@ export class AuthController {
       throw new HttpErrors.Unauthorized('Invalid credentials');
     }
 
-    // Generate JWT token
+    // Generate JWT token with role and permissions
     const token = sign(
       {
         id: user.id,
@@ -80,6 +95,7 @@ export class AuthController {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        permissions: user.permissions, // Include permissions from the user record
         role: user.role,
       },
       process.env.JWT_SECRET || 'mysecretkey123',

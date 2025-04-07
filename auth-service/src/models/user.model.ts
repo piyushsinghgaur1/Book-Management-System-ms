@@ -1,5 +1,7 @@
 import {Entity, model, property} from '@loopback/repository';
 import {IAuthUser} from 'loopback4-authentication';
+import { UserRole } from '../enums/roles.enum';
+import { Permission } from '../enums/permissions.enum';
 
 @model({name: 'users'})
 export class User extends Entity implements IAuthUser {
@@ -41,9 +43,20 @@ export class User extends Entity implements IAuthUser {
 
   @property({
     type: 'string',
-    required: true,
+    jsonSchema: {
+      enum: Object.values(UserRole),
+    },
   })
-  role: string;
+  role: UserRole;
+
+  @property({
+    type: 'array',
+    itemType: 'string',
+    jsonSchema: {
+      enum: Object.values(Permission),
+    },
+  })
+  permissions: Permission[];
 
   constructor(data?: Partial<User>) {
     super(data);

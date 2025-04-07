@@ -18,6 +18,7 @@ import {
   UserSignInInterface,
   UserSignUpInterface,
 } from '../interfaces/user-interface';
+import {authorize} from 'loopback4-authorization';
 const {
   DEVELOPMENT: {
     BOOK_BASE_URL,
@@ -60,6 +61,7 @@ export class ApiGatewayController {
 
   // Books endpoints
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['POST_BOOK']})
   @post('/books')
   async createBook(@requestBody() book: BookInterface) {
     try {
@@ -73,6 +75,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_BOOK']})
   @get('/books')
   async getBooks() {
     try {
@@ -112,6 +115,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_BOOK_BY_ID']})
   @get('/books/{id}')
   async getBookById(@param.path.string('id') id: string) {
     const response = await axios.get(`${this.bookServiceUrl}/books/${id}`);
@@ -119,6 +123,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['PATCH_BOOK']})
   @patch('/books/{id}')
   async updateBookById(
     @param.path.string('id') id: string,
@@ -132,6 +137,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['DELETE_BOOK']})
   @del('/books/{id}')
   async deleteBookById(@param.path.string('id') id: string) {
     const response = await axios.delete(`${this.bookServiceUrl}/books/${id}`);
@@ -163,6 +169,7 @@ export class ApiGatewayController {
   // Authors endpoints
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['POST_AUTHOR']})
   @post('/authors')
   async createAuthor(@requestBody() author: any) {
     try {
@@ -178,6 +185,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_AUTHOR']})
   @get('/authors')
   async getAllAuthors() {
     const response = await axios.get(`${this.authorServiceUrl}/authors`);
@@ -185,6 +193,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_AUTHOR_BY_ID']})
   @get('/authors/{id}')
   async getAuthorById(@param.path.string('id') id: string) {
     const response = await axios.get(`${this.authorServiceUrl}/authors/${id}`);
@@ -192,6 +201,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['PATCH_AUTHOR']})
   @patch('/authors/{id}')
   async updateAuthor(
     @param.path.string('id') id: string,
@@ -205,6 +215,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['DELETE_AUTHOR']})
   @del('/authors/{id}')
   async deleteAuthor(@param.path.string('id') id: string) {
     const response = await axios.delete(
@@ -215,6 +226,7 @@ export class ApiGatewayController {
 
   // Categories endpoints
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['POST_CATEGORY']})
   @post('/categories')
   async createCategory(@requestBody() category: any) {
     try {
@@ -230,6 +242,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_CATEGORY']})
   @get('/categories')
   async getAllCategories() {
     const response = await axios.get(`${this.categoryServiceUrl}/categories`);
@@ -237,6 +250,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_CATEGORY_BY_ID']})
   @get('/categories/{id}')
   async getCategoryById(@param.path.string('id') id: string) {
     const response = await axios.get(
@@ -246,6 +260,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['PATCH_CATEGORY']})
   @patch('/categories/{id}')
   async updateCategory(
     @param.path.string('id') id: string,
@@ -259,6 +274,7 @@ export class ApiGatewayController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['DELETE_CATEGORY']})
   @del('/categories/{id}')
   async deleteCategory(@param.path.string('id') id: string) {
     const response = await axios.delete(
