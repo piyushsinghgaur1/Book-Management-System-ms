@@ -1,13 +1,13 @@
-import dotenv from "dotenv";
-dotenv.config();
+require('dotenv').config();
+// console.log('New Relic configuration loaded',process.env.LICENSE_KEY);
 'use strict';
 exports.config = {
-  app_name: ['author-services'], // Replace with the service name, e.g., 'BookServices', 'bms-api-gateway'
-  license_key: process.env.LICENSE_KEY, // Get this from your New Relic account
+  app_name: [process.env.NEWRELLIC_APP_NAME], 
+  license_key: process.env.LICENSE_KEY, 
   logging: {
-    level: 'info', // Adjust log level as needed (e.g., 'debug', 'error')
+    level: 'info', 
   },
-  host: 'collector.newrelic.com', // Default collector, adjust if using EU region
+  host: 'collector.newrelic.com',
   distributed_tracing: {
     enabled: true, // Enable distributed tracing for microservices
   },

@@ -19,6 +19,7 @@ import {
   UserSignUpInterface,
 } from '../interfaces/user-interface';
 import {authorize} from 'loopback4-authorization';
+import {UserValidator} from '../validations/validate-user';
 const {
   DEVELOPMENT: {
     BOOK_BASE_URL,
@@ -33,7 +34,6 @@ export class ApiGatewayController {
   private authorServiceUrl = AUTHOR_BASE_URL;
   private categoryServiceUrl = CATEGORY_BASE_URL;
   private authServiceUrl = AUTH_BASE_URL;
-  private bookValidator = BookValidator.getInstance();
 
   constructor() {}
 
@@ -41,6 +41,7 @@ export class ApiGatewayController {
   @post('/signup')
   async signUp(@requestBody() user: UserSignUpInterface) {
     try {
+      UserValidator.getInstance().validateSignUp(user);
       const response = await axios.post(`${this.authServiceUrl}/signup`, user);
       return response.data;
     } catch (error) {
@@ -51,6 +52,7 @@ export class ApiGatewayController {
   @post('/login')
   async login(@requestBody() user: UserSignInInterface) {
     try {
+      UserValidator.getInstance().validateSignIn(user);
       const response = await axios.post(`${this.authServiceUrl}/login`, user);
       return response.data;
     } catch (error) {
@@ -65,7 +67,7 @@ export class ApiGatewayController {
   @post('/books')
   async createBook(@requestBody() book: BookInterface) {
     try {
-      await this.bookValidator.validate(book);
+      BookValidator.getInstance().validate(book); // Validate using the singleton instance
     } catch (error) {
       console.error('Validation failed:', error.message);
       throw error;

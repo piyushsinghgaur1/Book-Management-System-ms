@@ -5,9 +5,8 @@
     "outDir": "dist",
     "rootDir": "src"
   },
-  "include": ["src"],
+  "include": ["src","newrelic.js"],
   "exclude": [
-    "node_modules",
-    "newrelic.js"  
+    "node_modules"
   ]
 }

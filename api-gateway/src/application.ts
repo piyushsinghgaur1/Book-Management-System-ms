@@ -1,19 +1,22 @@
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
-import {RestExplorerBindings, RestExplorerComponent} from '@loopback/rest-explorer';
+import {
+  RestExplorerBindings,
+  RestExplorerComponent,
+} from '@loopback/rest-explorer';
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
 import {TokenServiceBindings, JWTService} from '@loopback/authentication-jwt';
-import {AuthorizationBindings, AuthorizationComponent} from 'loopback4-authorization';
-// import {AuthorizationBindings as CustomAuthBindings} from './keys/authorization.keys'; 
-// import { CustomJWTService } from './services/jwt.service';
-// import { MyAuthorizationProvider } from './providers/';
-import { AuthenticationComponent, Strategies } from 'loopback4-authentication';
-import { BearerTokenVerifyProvider } from './providers/bearer-token-verify.provider';
-import { ApiGatewayController } from './controllers';
+import {
+  AuthorizationBindings,
+  AuthorizationComponent,
+} from 'loopback4-authorization';
+import {AuthenticationComponent, Strategies} from 'loopback4-authentication';
+import {BearerTokenVerifyProvider} from './providers/bearer-token-verify.provider';
+import {ApiGatewayController} from './controllers';
 
 export {ApplicationConfig};
 
@@ -40,15 +43,15 @@ export class ApiGatewayApplication extends BootMixin(
       },
     };
 
-    this.controller(ApiGatewayController)
+    this.controller(ApiGatewayController);
     // this.bind(CustomAuthBindings.AUTHORIZER).toProvider(MyAuthorizationProvider);
 
-    this.component(AuthenticationComponent)
+    this.component(AuthenticationComponent);
     this.bind(AuthorizationBindings.CONFIG).to({
       allowAlwaysPaths: ['/explorer', '/signup', '/login'],
     });
     this.component(AuthorizationComponent);
-  
+
     // this.bind('services.JWTService').toClass(CustomJWTService);
     // Bind JWT configuration (match authService)
     // this.bind(TokenServiceBindings.TOKEN_SECRET).to('your-jwt-secret');
@@ -57,6 +60,5 @@ export class ApiGatewayApplication extends BootMixin(
     this.bind(Strategies.Passport.BEARER_TOKEN_VERIFIER).toProvider(
       BearerTokenVerifyProvider,
     );
-
   }
 }

@@ -56,10 +56,10 @@ export class AuthController {
         permissions: user.permissions, // Include permissions in token
         role: user.role,
       },
-      process.env.JWT_SECRET || 'mysecretkey123',
+      process.env.JWT_SECRET ?? 'mysecretkey123',
       {
         expiresIn: '1h',
-        issuer: process.env.JWT_ISSUER || 'app',
+        issuer: process.env.JWT_ISSUER ?? 'app',
       },
     );
 
@@ -98,10 +98,10 @@ export class AuthController {
         permissions: user.permissions, // Include permissions from the user record
         role: user.role,
       },
-      process.env.JWT_SECRET || 'mysecretkey123',
+      process.env.JWT_SECRET ?? 'mysecretkey123',
       {
         expiresIn: '1h',
-        issuer: process.env.JWT_ISSUER || 'app',
+        issuer: process.env.JWT_ISSUER ?? 'app',
       },
     );
 
