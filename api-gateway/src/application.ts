@@ -9,7 +9,7 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-import {TokenServiceBindings, JWTService} from '@loopback/authentication-jwt';
+import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import {
   AuthorizationBindings,
   AuthorizationComponent,

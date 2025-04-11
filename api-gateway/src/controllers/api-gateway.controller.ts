@@ -67,7 +67,7 @@ export class ApiGatewayController {
   @post('/books')
   async createBook(@requestBody() book: BookInterface) {
     try {
-      BookValidator.getInstance().validate(book); // Validate using the singleton instance
+      await BookValidator.getInstance().validate(book); // Validate using the singleton instance
     } catch (error) {
       console.error('Validation failed:', error.message);
       throw error;

@@ -20,6 +20,7 @@ export class BearerTokenVerifyProvider
         if (!user) {
           throw new HttpErrors.Unauthorized('Invalid token');
         }
+        console.log('user from token', user);
 
         return user;
       } catch (err) {
