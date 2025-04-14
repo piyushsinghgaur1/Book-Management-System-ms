@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+require(dotenv).config();
 'use strict';
 exports.config = {
   app_name: ['api-gateway'], // Replace with the service name, e.g., 'BookServices', 'bms-api-gateway'
