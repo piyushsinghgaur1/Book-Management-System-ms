@@ -1,7 +1,7 @@
 import {Entity, model, property} from '@loopback/repository';
 import {IAuthUser} from 'loopback4-authentication';
-import { UserRole } from '../enums/roles.enum';
-import { Permission } from '../enums/permissions.enum';
+import {UserRole} from '../enums/roles.enum';
+import {Permission} from '../enums/permissions.enum';
 
 @model({name: 'users'})
 export class User extends Entity implements IAuthUser {
